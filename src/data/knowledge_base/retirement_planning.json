@@ -1,0 +1,47 @@
+[
+  {
+    "id": "ret_001",
+    "category": "retirement_accounts",
+    "title": "401(k)",
+    "content": "A 401(k) is an employer-sponsored retirement savings account that may include employer matching contributions. Contributions may be pre-tax or Roth depending on plan options.",
+    "keywords": ["401k", "retirement account", "employer match", "pre-tax", "Roth"],
+    "source": "retirement_planning_kb",
+    "goal_type": "retirement"
+  },
+  {
+    "id": "ret_002",
+    "category": "retirement_accounts",
+    "title": "Traditional IRA",
+    "content": "A Traditional IRA is an individual retirement account that may offer tax-deductible contributions depending on income and other retirement coverage rules.",
+    "keywords": ["Traditional IRA", "IRA", "tax deductible", "retirement"],
+    "source": "retirement_planning_kb",
+    "goal_type": "retirement"
+  },
+  {
+    "id": "ret_003",
+    "category": "retirement_accounts",
+    "title": "Roth IRA",
+    "content": "A Roth IRA is a retirement account funded with after-tax dollars, allowing qualified withdrawals in retirement to be tax free under current rules.",
+    "keywords": ["Roth IRA", "after-tax", "tax free withdrawals", "retirement"],
+    "source": "retirement_planning_kb",
+    "goal_type": "retirement"
+  },
+  {
+    "id": "ret_004",
+    "category": "planning",
+    "title": "Retirement Savings Goal",
+    "content": "A retirement savings plan should consider current age, target retirement age, expected annual expenses, inflation, and estimated investment returns.",
+    "keywords": ["retirement planning", "savings goal", "inflation", "future expenses"],
+    "source": "retirement_planning_kb",
+    "goal_type": "retirement"
+  },
+  {
+    "id": "ret_005",
+    "category": "planning",
+    "title": "Emergency Fund Before Investing",
+    "content": "Many financial plans recommend building an emergency fund covering 3 to 6 months of essential expenses before taking on higher-risk investing goals.",
+    "keywords": ["emergency fund", "3 to 6 months", "cash reserve", "financial safety"],
+    "source": "retirement_planning_kb",
+    "goal_type": "financial_stability"
+  }
+]

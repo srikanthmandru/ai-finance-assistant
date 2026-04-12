@@ -1,0 +1,47 @@
+[
+  {
+    "id": "faq_001",
+    "category": "general_finance",
+    "title": "What is an ETF?",
+    "content": "An ETF, or exchange-traded fund, is a basket of securities such as stocks or bonds that trades on an exchange like a stock. ETFs can provide diversification, lower expense ratios, and easy intraday trading.",
+    "keywords": ["ETF", "exchange traded fund", "diversification", "stocks", "bonds"],
+    "source": "finance_faq_kb",
+    "difficulty": "beginner"
+  },
+  {
+    "id": "faq_002",
+    "category": "general_finance",
+    "title": "What is compound interest?",
+    "content": "Compound interest is interest earned on both the initial principal and the accumulated interest from prior periods. Over long time horizons, compounding can significantly increase savings or investment growth.",
+    "keywords": ["compound interest", "compounding", "interest", "savings", "investing"],
+    "source": "finance_faq_kb",
+    "difficulty": "beginner"
+  },
+  {
+    "id": "faq_003",
+    "category": "general_finance",
+    "title": "What is diversification?",
+    "content": "Diversification means spreading investments across different assets, sectors, or geographies to reduce the impact of poor performance from a single investment.",
+    "keywords": ["diversification", "portfolio", "risk reduction", "asset allocation"],
+    "source": "finance_faq_kb",
+    "difficulty": "beginner"
+  },
+  {
+    "id": "faq_004",
+    "category": "general_finance",
+    "title": "What is inflation?",
+    "content": "Inflation is the rate at which the prices of goods and services rise over time, which reduces purchasing power. Investments often aim to outpace inflation over the long term.",
+    "keywords": ["inflation", "purchasing power", "prices", "economy"],
+    "source": "finance_faq_kb",
+    "difficulty": "beginner"
+  },
+  {
+    "id": "faq_005",
+    "category": "general_finance",
+    "title": "What is dollar-cost averaging?",
+    "content": "Dollar-cost averaging is an investment strategy where a fixed amount is invested at regular intervals regardless of market price. This can reduce the effect of short-term market volatility.",
+    "keywords": ["dollar cost averaging", "DCA", "regular investing", "volatility"],
+    "source": "finance_faq_kb",
+    "difficulty": "intermediate"
+  }
+]

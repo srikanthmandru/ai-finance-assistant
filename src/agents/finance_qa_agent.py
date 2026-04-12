@@ -55,12 +55,19 @@ class QAAgent(BaseAgent):
             """.strip()
 
         answer = self.llm.invoke(prompt)
+        # Normalize LLM output to plain string
+        if hasattr(answer, "content"):
+            answer_text = answer.content
+        elif isinstance(answer, dict) and "content" in answer:
+            answer_text = answer["content"]
+        else:
+            answer_text = str(answer)
         sources = format_sources(docs)
 
         return {
             **state,
             "retrieved_docs": docs,
-            "response": f"{answer}\n\n{sources}",
+            "response": f"{answer_text}\n\n{sources}",
             "error": None,
         }
         

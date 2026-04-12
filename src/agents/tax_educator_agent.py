@@ -34,10 +34,17 @@ class TaxAgent(BaseAgent):
         docs = self.retriever.retrieve(query, top_k=4)
         prompt = self._build_prompt(query, docs)
         answer = self.llm.invoke(prompt)
+        # Normalize LLM output to plain string
+        if hasattr(answer, "content"):
+            answer_text = answer.content
+        elif isinstance(answer, dict) and "content" in answer:
+            answer_text = answer["content"]
+        else:
+            answer_text = str(answer)
 
         return {
             **state,
             "retrieved_docs": docs,
-            "response": answer,
+            "response": answer_text,
             "error": None,
         }

@@ -4,6 +4,7 @@ from typing import Dict, List
 import yfinance as yf
 
 from src.tools.cache_manager import CacheManager
+import re
 
 
 class MarketDataTool:
@@ -11,12 +12,19 @@ class MarketDataTool:
         self.cache = CacheManager(ttl_seconds=ttl_seconds)
 
     def _extract_ticker(self, query: str) -> str:
-        tokens = query.upper().split()
-        for token in tokens:
-            clean = token.strip(",.?!")
-            if 1 <= len(clean) <= 5 and clean.isalpha():
-                return clean
-        raise ValueError("Could not identify ticker symbol from query.")
+        try: 
+            tokens = query.upper().split()
+            # Matches anything inside '...' that isn't another single quote
+            pattern = r"\'([^\']*)\'"
+
+            matches = re.findall(pattern, query)
+            return matches[0]
+            # for token in tokens:
+            #     clean = token.strip(",.?!")
+            #     if 1 <= len(clean) <= 5 and clean.isalpha():
+            #         return clean
+        except Exception as e:
+            raise ValueError("Could not identify ticker symbol from query.")
 
     def _build_summary(self, data: Dict) -> str:
         return (

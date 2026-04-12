@@ -1,0 +1,44 @@
+[
+  {
+    "id": "risk_001",
+    "profile": "conservative",
+    "title": "Conservative",
+    "description": "Conservative investors prioritize capital preservation and lower volatility over high returns.",
+    "content": "Conservative investors prioritize capital preservation and lower volatility over high returns.",
+    "source": "risk_profiles_kb",
+    "allocation_hint": {
+      "stocks": "20-40%",
+      "bonds": "40-60%",
+      "cash": "10-20%"
+    },
+    "keywords": ["conservative", "low risk", "capital preservation", "income"]
+  },
+  {
+    "id": "risk_002",
+    "profile": "moderate",
+    "title": "Moderate",
+    "description": "Moderate investors seek a balance between growth and stability, accepting some volatility for potentially higher returns.",
+    "content": "Moderate investors seek a balance between growth and stability, accepting some volatility for potentially higher returns.",
+    "source": "risk_profiles_kb",
+    "allocation_hint": {
+      "stocks": "50-70%",
+      "bonds": "20-40%",
+      "cash": "5-10%"
+    },
+    "keywords": ["moderate", "balanced", "growth and stability", "medium risk"]
+  },
+  {
+    "id": "risk_003",
+    "profile": "aggressive",
+    "title": "Aggressive",
+    "description": "Aggressive investors focus on long-term growth and are willing to tolerate larger short-term price swings.",
+    "content": "Aggressive investors focus on long-term growth and are willing to tolerate larger short-term price swings.",
+    "source": "risk_profiles_kb",
+    "allocation_hint": {
+      "stocks": "70-90%",
+      "bonds": "5-20%",
+      "cash": "0-10%"
+    },
+    "keywords": ["aggressive", "high risk", "growth", "long term"]
+  }
+]

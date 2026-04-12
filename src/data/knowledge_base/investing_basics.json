@@ -1,0 +1,52 @@
+[
+  {
+    "id": "inv_001",
+    "category": "asset_classes",
+    "title": "Stocks",
+    "content": "Stocks represent ownership in a company. They generally offer higher long-term growth potential but also higher short-term volatility compared to bonds or cash equivalents.",
+    "keywords": ["stocks", "equities", "ownership", "growth", "volatility"],
+    "source": "investing_basics_kb",
+    "risk_level": "medium_high",
+    "time_horizon": "long_term"
+  },
+  {
+    "id": "inv_002",
+    "category": "asset_classes",
+    "title": "Bonds",
+    "content": "Bonds are fixed-income investments where investors lend money to governments or corporations in exchange for periodic interest payments and principal repayment at maturity.",
+    "keywords": ["bonds", "fixed income", "interest", "maturity"],
+    "source": "investing_basics_kb",
+    "risk_level": "low_medium",
+    "time_horizon": "short_to_medium_term"
+  },
+  {
+    "id": "inv_003",
+    "category": "asset_classes",
+    "title": "Mutual Funds",
+    "content": "Mutual funds pool money from many investors to buy a diversified portfolio of assets. They are priced once per day after market close.",
+    "keywords": ["mutual funds", "pooled investment", "diversified portfolio"],
+    "source": "investing_basics_kb",
+    "risk_level": "varies",
+    "time_horizon": "medium_to_long_term"
+  },
+  {
+    "id": "inv_004",
+    "category": "asset_classes",
+    "title": "Index Funds",
+    "content": "Index funds aim to track the performance of a specific market index, such as the S&P 500. They are commonly used for low-cost, diversified, passive investing.",
+    "keywords": ["index funds", "passive investing", "S&P 500", "low cost"],
+    "source": "investing_basics_kb",
+    "risk_level": "medium",
+    "time_horizon": "long_term"
+  },
+  {
+    "id": "inv_005",
+    "category": "investment_strategy",
+    "title": "Asset Allocation",
+    "content": "Asset allocation is the mix of stocks, bonds, cash, and other assets in a portfolio. The ideal allocation depends on risk tolerance, age, financial goals, and time horizon.",
+    "keywords": ["asset allocation", "portfolio mix", "risk tolerance", "time horizon"],
+    "source": "investing_basics_kb",
+    "risk_level": "varies",
+    "time_horizon": "all"
+  }
+]

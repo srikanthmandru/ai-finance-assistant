@@ -111,11 +111,13 @@ streamlit run src/web_app/app.py
 ## Example User queries
 
 - “What is an ETF?” → Finance Q&A Agent
-- “Analyze my portfolio” → Portfolio Agent
-- “What is Apple stock price?” → Market Agent
+- "what was previous question related to?" - chat history
+- “Analyze my portfolio.” → Portfolio Agent
+- “What is Apple stock price('AAPL')?” → Market Agent
+- “Explain capital gains tax” → Tax Agent
 - “Help me save $50k in 5 years” → Goal Agent
 - “Summarize market news” → News Agent
-- “Explain capital gains tax” → Tax Agent
+
 
 ## Notes
 

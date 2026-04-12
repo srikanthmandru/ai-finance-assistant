@@ -1,8 +1,10 @@
 
 from typing import Literal
 
+from src.routers.finance_qa_router import create_router
 from src.workflow.state import FinanceAssistantState
 
+router = create_router()
 
 AgentType = Literal["qa", "portfolio", "market", "goal", "news", "tax"]
 
@@ -40,6 +42,7 @@ def router_node(state: FinanceAssistantState) -> FinanceAssistantState:
         }
 
     agent_type = classify_query(query)
+    # agent_type  = router(query)
 
     return {
         **state,

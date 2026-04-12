@@ -5,14 +5,19 @@ from pathlib import Path
 from src.rag.chunking import prepare_chunks
 from src.rag.embeddings import EmbeddingService
 from src.rag.vector_store import FAISSVectorStore
+import os
 
 
 def load_documents(data_dir: str):
-    documents = []
-    for file_path in Path(data_dir).glob("*.json"):
-        with open(file_path, "r", encoding="utf-8") as f:
-            documents.append(json.load(f))
-    return documents
+    docs = []
+    for file in Path(data_dir).glob("*.json"):
+        with open(file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if isinstance(data, list):
+                docs.extend(data)
+            # elif isinstance(data, dict) and "documents" in data:
+            #     docs.extend(data["documents"])
+    return docs
 
 
 def build_faiss_index(data_dir: str, embedding_model):
@@ -35,7 +40,7 @@ if __name__ == "__main__":
 
     load_dotenv()
 
-    embedding_model = OpenAIEmbeddings()
+    embedding_model = OpenAIEmbeddings(api_key=os.getenv('OPENAI_API_KEY'))
 
     vector_store = build_faiss_index(
         data_dir="src/data/knowledge_base",

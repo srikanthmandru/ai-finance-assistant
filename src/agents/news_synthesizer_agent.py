@@ -32,10 +32,17 @@ News:
 """.strip()
 
         summary = self.llm.invoke(prompt)
+        # Normalize LLM output to plain string
+        if hasattr(summary, "content"):
+            summary_text = summary.content
+        elif isinstance(summary, dict) and "content" in summary:
+            summary_text = summary["content"]
+        else:
+            summary_text = str(summary)
 
         return {
             **state,
             "news_data": articles,
-            "response": summary,
+            "response": summary_text,
             "error": None,
         }

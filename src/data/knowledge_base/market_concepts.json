@@ -1,0 +1,47 @@
+[
+  {
+    "id": "mkt_001",
+    "category": "market_metrics",
+    "title": "Market Capitalization",
+    "content": "Market capitalization is the total value of a company's outstanding shares, calculated as share price multiplied by the number of shares outstanding.",
+    "keywords": ["market cap", "valuation", "shares outstanding"],
+    "source": "market_concepts_kb",
+    "formula": "market_cap = share_price * shares_outstanding"
+  },
+  {
+    "id": "mkt_002",
+    "category": "market_metrics",
+    "title": "Price-to-Earnings Ratio",
+    "content": "The P/E ratio compares a company's stock price to its earnings per share. It is often used to evaluate whether a stock appears expensive or inexpensive relative to earnings.",
+    "keywords": ["P/E", "price earnings ratio", "EPS", "valuation"],
+    "source": "market_concepts_kb",
+    "formula": "pe_ratio = stock_price / earnings_per_share"
+  },
+  {
+    "id": "mkt_003",
+    "category": "market_metrics",
+    "title": "Dividend Yield",
+    "content": "Dividend yield measures annual dividend income relative to a stock's price. It is often used by income-focused investors.",
+    "keywords": ["dividend yield", "income investing", "dividends"],
+    "source": "market_concepts_kb",
+    "formula": "dividend_yield = annual_dividend_per_share / stock_price"
+  },
+  {
+    "id": "mkt_004",
+    "category": "market_behavior",
+    "title": "Bull Market",
+    "content": "A bull market is a period when asset prices are generally rising and investor confidence is strong.",
+    "keywords": ["bull market", "rising prices", "investor confidence"]
+    ,
+    "source": "market_concepts_kb"
+  },
+  {
+    "id": "mkt_005",
+    "category": "market_behavior",
+    "title": "Bear Market",
+    "content": "A bear market is a period when asset prices generally decline significantly from recent highs, often accompanied by negative investor sentiment.",
+    "keywords": ["bear market", "market decline", "negative sentiment"]
+    ,
+    "source": "market_concepts_kb"
+  }
+]

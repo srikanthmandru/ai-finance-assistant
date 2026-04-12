@@ -1,9 +1,12 @@
+from langchain.messages import AIMessage
+from langchain_openai import ChatOpenAI
 import streamlit as st
 
 import os
 
 
 from src.agents import build_agents
+from src.constants import Constants
 from src.rag.build_index import build_faiss_index
 from src.rag.embeddings import EmbeddingService
 from src.rag.retriever import FinanceRetriever
@@ -45,7 +48,8 @@ def setup_app():
     embedding_service = EmbeddingService(embedding_model)
     retriever = FinanceRetriever(embedding_service, vector_store)
 
-    llm = DummyLLM()
+    # llm = DummyLLM()
+    llm = ChatOpenAI(api_key=Constants.OPENAI_API_KEY, temperature=Constants.TEMPERATURE, model=Constants.AGENT_LLM_MAP["router_agent"])
     calculator = PortfolioCalculator()
     market_tool = MarketDataTool()
     planner = GoalPlanner()
@@ -67,6 +71,8 @@ def setup_app():
 def main():
     st.set_page_config(page_title="Finnie AI", layout="wide")
     st.title("Finnie AI - Your Personal Finance Assistant")
+    st.text("Ask questions, analyze your portfolio, get market updates, and plan your financial goals—all in one place!")
+    st.text("(Disclaimer: This app provides educational information and is not a substitute for professional financial advice.)")
 
     init_session_state()
     app_graph, market_tool, calculator, planner = setup_app()
@@ -89,7 +95,10 @@ def main():
             }
 
             result = app_graph.invoke(state)
-            assistant_reply = result.get("response", "No response generated.")
+            if isinstance(result, AIMessage):
+                assistant_reply = result.content
+            else:
+                assistant_reply = result.get("response", "No response generated.")
 
             st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
             st.rerun()
