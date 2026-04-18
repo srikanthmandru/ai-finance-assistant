@@ -1,7 +1,10 @@
 from langchain.messages import AIMessage
 from langchain_openai import ChatOpenAI
 import streamlit as st
-
+from src.core.memory_manager import MemoryManager
+from src.core.llm import OpenAILLM
+from src.workflow import llm_router
+from src.workflow.llm_router import LLMRouter
 import os
 
 
@@ -22,6 +25,7 @@ from src.web_app.components import (
 )
 from src.web_app.session import init_session_state
 from src.workflow.graph import build_graph
+from src.utils.input_parser import parse_goal_from_query, parse_portfolio_from_query
 
 
 class DummyLLM:
@@ -41,19 +45,19 @@ class DummyEmbeddingModel:
     def embed_query(self, query):
         return [0.1] * 8
 
-
 def setup_app():
     embedding_model = DummyEmbeddingModel()
     vector_store = build_faiss_index("src/data/knowledge_base", embedding_model)
     embedding_service = EmbeddingService(embedding_model)
     retriever = FinanceRetriever(embedding_service, vector_store)
 
-    # llm = DummyLLM()
-    llm = ChatOpenAI(api_key=Constants.OPENAI_API_KEY, temperature=Constants.TEMPERATURE, model=Constants.AGENT_LLM_MAP["router_agent"])
+    llm = OpenAILLM(model="gpt-4.1-mini")
+    llm_router = LLMRouter(llm=llm)
     calculator = PortfolioCalculator()
     market_tool = MarketDataTool()
     planner = GoalPlanner()
     news_tool = DummyNewsTool()
+    memory_manager = MemoryManager(llm=llm, threshold=12, keep_recent=6)
 
     agents = build_agents(
         retriever=retriever,
@@ -65,17 +69,15 @@ def setup_app():
     )
 
     app_graph = build_graph(agents)
-    return app_graph, market_tool, calculator, planner
+    return app_graph, market_tool, calculator, planner, memory_manager, llm_router
 
 
 def main():
-    st.set_page_config(page_title="Finnie AI", layout="wide")
-    st.title("Finnie AI - Your Personal Finance Assistant")
-    st.text("Ask questions, analyze your portfolio, get market updates, and plan your financial goals—all in one place!")
-    st.text("(Disclaimer: This app provides educational information and is not a substitute for professional financial advice.)")
+    st.set_page_config(page_title="AI Finance Assistant", layout="wide")
+    st.title("AI Finance Assistant")
 
     init_session_state()
-    app_graph, market_tool, calculator, planner = setup_app()
+    app_graph, market_tool, calculator, planner, memory_manager, llm_router = setup_app()
 
     tab1, tab2, tab3, tab4 = st.tabs(["Chat", "Portfolio", "Market", "Goals"])
 
@@ -87,20 +89,65 @@ def main():
         if user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
 
+            parsed_portfolio = parse_portfolio_from_query(user_input)
+            parsed_goal = parse_goal_from_query(user_input)
+
+            current_portfolio_data = (
+                parsed_portfolio
+                if parsed_portfolio.get("holdings")
+                else st.session_state.portfolio_data
+            )
+
+            current_goal_data = (
+                parsed_goal
+                if parsed_goal.get("target_amount")
+                else st.session_state.goal_data
+            )
+
             state = {
                 "user_query": user_input,
                 "messages": st.session_state.messages,
-                "portfolio_data": st.session_state.portfolio_data,
-                "goal_data": st.session_state.goal_data,
+                "portfolio_data": current_portfolio_data,
+                "goal_data": current_goal_data,
+                "conversation_summary": st.session_state.conversation_summary,
+                "summary_message_count": st.session_state.summary_message_count,
+                "user_profile": st.session_state.get("user_profile", {}),
+                "portfolio_analysis": st.session_state.get("portfolio_analysis", {}),
+                "goal_plan": st.session_state.get("goal_plan", {}),
+                "market_data": st.session_state.get("market_data", {}),
+                "llm_router": llm_router,
             }
 
-            result = app_graph.invoke(state)
-            if isinstance(result, AIMessage):
-                assistant_reply = result.content
-            else:
-                assistant_reply = result.get("response", "No response generated.")
+            state = memory_manager.update_memory(state)
 
-            st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
+            result = app_graph.invoke(state)
+            assistant_reply = result.get("response", "No response generated.")
+
+            st.session_state.user_profile = result.get("user_profile", st.session_state.get("user_profile", {}))
+            st.session_state.portfolio_analysis = result.get("portfolio_analysis", st.session_state.get("portfolio_analysis", {}))
+            st.session_state.goal_plan = result.get("goal_plan", st.session_state.get("goal_plan", {}))
+            
+            if parsed_portfolio.get("holdings"):
+                st.session_state.portfolio_data = parsed_portfolio
+
+            if parsed_goal.get("target_amount"):
+                st.session_state.goal_data = parsed_goal
+
+            st.session_state.market_data = result.get("market_data", st.session_state.get("market_data", {}))
+
+            st.session_state.messages = result.get("messages", state["messages"])
+            st.session_state.conversation_summary = result.get(
+                "conversation_summary",
+                state.get("conversation_summary", ""),
+            )
+            st.session_state.summary_message_count = result.get(
+                "summary_message_count",
+                state.get("summary_message_count", 0),
+            )
+
+            st.session_state.messages.append(
+                {"role": "assistant", "content": assistant_reply}
+            )
             st.rerun()
 
     with tab2:
@@ -138,16 +185,21 @@ def main():
         st.subheader("Market Overview")
 
         ticker = st.text_input("Ticker Symbol", value="AAPL")
+        provider_note = st.caption("Uses Alpha Vantage first, then yfinance fallback.")
+
         if st.button("Get Market Data"):
-            market_data = market_tool.get_quote(ticker)
-            history = market_tool.get_history(ticker, period="1mo")
-            st.session_state.market_history = history
+            try:
+                market_data = market_tool.get_quote(ticker.upper())
+                history = market_tool.get_history(ticker.upper(), period="1mo")
+                st.session_state.market_history = history
 
-            render_market_summary(market_data)
+                render_market_summary(market_data)
 
-            fig = market_line_chart(history)
-            if fig:
-                st.plotly_chart(fig, use_container_width=True)
+                fig = market_line_chart(history)
+                if fig:
+                    st.plotly_chart(fig, use_container_width=True)
+            except Exception as exc:
+                st.error(f"Failed to fetch market data: {exc}")
 
     with tab4:
         st.subheader("Goal Planning")

@@ -18,3 +18,9 @@ def init_session_state():
 
     if "market_history" not in st.session_state:
         st.session_state.market_history = []
+
+    if "conversation_summary" not in st.session_state:
+        st.session_state.conversation_summary = ""
+
+    if "summary_message_count" not in st.session_state:
+        st.session_state.summary_message_count = 0

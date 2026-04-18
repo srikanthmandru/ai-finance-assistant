@@ -1,59 +1,56 @@
-
-from typing import Literal
-
-from src.routers.finance_qa_router import create_router
+from src.utils.profile_extractor import update_user_profile
 from src.workflow.state import FinanceAssistantState
-
-router = create_router()
-
-AgentType = Literal["qa", "portfolio", "market", "goal", "news", "tax"]
-
-
-def classify_query(query: str) -> AgentType:
-    q = query.lower()
-
-    if any(word in q for word in ["portfolio", "allocation", "diversified", "rebalance", "holdings"]):
-        return "portfolio"
-
-    if any(word in q for word in ["stock", "market", "price", "ticker", "trend", "share"]):
-        return "market"
-
-    if any(word in q for word in ["goal", "save", "retirement", "plan", "future value"]):
-        return "goal"
-
-    if any(word in q for word in ["tax", "401k", "ira", "capital gains", "deduction"]):
-        return "tax"
-
-    if any(word in q for word in ["news", "headline", "update", "recent market news"]):
-        return "news"
-
-    return "qa"
 
 
 def router_node(state: FinanceAssistantState) -> FinanceAssistantState:
     query = state.get("user_query", "").strip()
+    profile = state.get("user_profile", {})
+    llm_router = state.get("llm_router")
 
     if not query:
         return {
             **state,
             "query_type": "qa",
             "selected_agent": "qa",
+            "agent_chain": ["qa"],
+            "current_agent_index": 0,
+            "agent_outputs": {},
             "error": "Empty query received.",
         }
 
-    agent_type = classify_query(query)
-    # agent_type  = router(query)
+    if llm_router:
+        agent_chain = llm_router.classify(query)
+    else:
+        agent_chain = ["qa"]
+
+    updated_profile = update_user_profile(profile, query)
 
     return {
         **state,
-        "query_type": agent_type,
-        "selected_agent": agent_type,
+        "query_type": agent_chain[0],
+        "selected_agent": agent_chain[0],
+        "agent_chain": agent_chain,
+        "current_agent_index": 0,
+        "agent_outputs": {},
+        "user_profile": updated_profile,
         "error": None,
     }
 
 
-def route_to_agent(state: FinanceAssistantState) -> str:
+def route_after_router(state: FinanceAssistantState) -> str:
+    if state.get("error"):
+        return "fallback"
+    return state.get("selected_agent", "qa")
+
+
+def route_after_agent(state: FinanceAssistantState) -> str:
     if state.get("error"):
         return "fallback"
 
-    return state.get("selected_agent", "qa")
+    chain = state.get("agent_chain", [])
+    next_index = state.get("current_agent_index", 0)
+
+    if next_index < len(chain):
+        return chain[next_index]
+
+    return "response"

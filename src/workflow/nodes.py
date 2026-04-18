@@ -1,4 +1,4 @@
-
+# src/workflow/nodes.py
 from typing import Any, Callable, Dict
 
 from src.workflow.state import FinanceAssistantState
@@ -8,7 +8,19 @@ def make_agent_node(agent_name: str, agents: Dict[str, Any]) -> Callable[[Financ
     def agent_node(state: FinanceAssistantState) -> FinanceAssistantState:
         try:
             agent = agents[agent_name]
-            return agent.run(state)
+            result = agent.run(state)
+
+            outputs = dict(state.get("agent_outputs", {}))
+            outputs[agent_name] = result.get("response", "")
+
+            current_index = state.get("current_agent_index", 0)
+            next_index = current_index + 1
+
+            return {
+                **result,
+                "agent_outputs": outputs,
+                "current_agent_index": next_index,
+            }
         except Exception as exc:
             return {
                 **state,
@@ -19,27 +31,29 @@ def make_agent_node(agent_name: str, agents: Dict[str, Any]) -> Callable[[Financ
 
 
 def response_node(state: FinanceAssistantState) -> FinanceAssistantState:
-    try:
-        response = state.get("response", "").strip()
+    outputs = state.get("agent_outputs", {})
 
-        if not response:
-            response = (
-                "I could not generate a complete response. "
-                "Please refine your question and try again."
-            )
+    if outputs:
+        sections = []
+        ordered_agents = state.get("agent_chain", [])
 
-        if state.get("retrieved_docs"):
-            response += "\n\nSources: available from retrieved knowledge base documents."
+        for agent_name in ordered_agents:
+            if agent_name in outputs:
+                title = agent_name.replace("_", " ").title()
+                sections.append(f"### {title}\n{outputs[agent_name]}")
 
-        response += "\n\nDisclaimer: This is for educational purposes only and not financial advice."
+        final_response = "\n\n".join(sections)
+    else:
+        final_response = state.get("response", "").strip()
 
-        return {
-            **state,
-            "response": response,
-        }
+    if not final_response:
+        final_response = "I could not generate a complete response."
 
-    except Exception as exc:
-        return {
-            **state,
-            "error": f"Failed to generate response",
-        }
+    final_response += (
+        "\n\nDisclaimer: This assistant is for educational purposes only and does not provide financial advice."
+    )
+
+    return {
+        **state,
+        "response": final_response,
+    }

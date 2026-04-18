@@ -3,12 +3,12 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, StateGraph
 
 from agents.router_agent import router_agent_node
-from agents.finance_qa_agent import finance_qa_agent_node
-from agents.goal_planner_agent import goal_planner_agent_node
-from agents.market_analyzer_agent import market_analyzer_agent_node
-from agents.news_synthesizer_agent import news_synthesizer_agent_node
-from agents.portfolio_analyzer_agent import portfolio_analyzer_agent_node
-from agents.tax_educator_agent import tax_educator_agent_node
+from src.agents.qa_agent import finance_qa_agent_node
+from src.agents.goal_agent import goal_planner_agent_node
+from src.agents.market_agent import market_analyzer_agent_node
+from src.agents.news_agent import news_synthesizer_agent_node
+from src.agents.portfolio_agent import portfolio_analyzer_agent_node
+from src.agents.tax_agent import tax_educator_agent_node
 from state.finance_workflow_state import FinanceWorkflowState
 
 

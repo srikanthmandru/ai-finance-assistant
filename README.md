@@ -108,15 +108,70 @@ export PYTHONPATH=$(pwd)
 streamlit run src/web_app/app.py
 ```
 
-## Example User queries
+```bash
+# Run tests
+pytest
+```
 
-- “What is an ETF?” → Finance Q&A Agent
-- "what was previous question related to?" - chat history
-- “Analyze my portfolio.” → Portfolio Agent
-- “What is Apple stock price('AAPL')?” → Market Agent
-- “Explain capital gains tax” → Tax Agent
-- “Help me save $50k in 5 years” → Goal Agent
-- “Summarize market news” → News Agent
+## Example User queries
+#### QA Agent
+- What is an ETF?
+- Is an ETF safer than an individual stock?
+- Compare ETFs with mutual funds.
+- What does diversification mean?
+- Explain compound interest in simple terms.
+#### Market Agent
+- What is the current price of AAPL?
+- Show me the trend for NVDA over the last month.
+- How has TSLA performed recently?
+- Give me a market snapshot for my portfolio.
+- What is happening with MSFT stock?
+#### Portfolio Agent
+- Analyze this portfolio: 10 VTI at 250, 5 AAPL at 190, 8 BND at 72
+- Is this portfolio diversified enough: 20 AAPL at 190, 15 MSFT at 420
+- Suggest improvements for this portfolio: 10 VTI at 250, 5 AAPL at 190, 8 BND at 72
+- How risky is this portfolio: 15 TSLA at 180, 10 NVDA at 900
+- Help me rebalance this portfolio: 20 AAPL at 190, 10 TSLA at 180, 5 BND at 72
+#### Goal Agent
+- Help me save 50000 in 5 years at 7% annual return.
+- How much will I have if I invest 500 per month for 10 years at 7%?
+- I want to reach 100000 in 8 years. How much should I invest monthly?
+- If I invest 1000 per month for 15 years, what could it grow to?
+- Plan a retirement goal of 750000 in 25 years.
+#### Multi-agent queries
+- Analyze this portfolio and compare it with current market trends: 10 VTI at 250, 5 AAPL at 190, 8 BND at 72
+- Help me plan retirement and explain the tax basics.
+- Build a beginner ETF portfolio and analyze its risk.
+- Compare my portfolio with market conditions and suggest improvements: 10 VTI at 250, 5 AAPL at 190, 8 BND at 72
+- If I have moderate risk tolerance, how should I plan a 10-year investment goal?
+- Follow-up / multi-turn queries
+
+Use these in sequence.
+
+##### Flow 1
+- What is an ETF?
+- Is that safer than individual stocks?
+- Compare it with bonds.
+- Build a beginner portfolio using it.
+- Now analyze that portfolio.
+- Add few more stocks, ETFs and bonds to the beginner portfolio.
+
+##### Flow 2
+- Help me save 50000 in 5 years at 7% annual return.
+- What if I extend it to 7 years?
+- What if my return is only 5%?
+- Is that a high monthly contribution?
+##### Flow 3
+- Analyze this portfolio: 10 VTI at 250, 5 AAPL at 190, 8 BND at 72
+- How is it doing compared with market trends?
+- Should I reduce concentration risk?
+- What would be a more balanced version?
+##### Best 5 queries for demo
+- What is an ETF?
+- Analyze this portfolio: 10 VTI at 250, 5 AAPL at 190, 8 BND at 72
+- Show me the trend for AAPL over the last month.
+- Help me save 50000 in 5 years at 7% annual return.
+- Analyze this portfolio and compare it with current market trends: 10 VTI at 250, 5 AAPL at 190, 8 BND at 72
 
 
 ## Notes
