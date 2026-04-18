@@ -103,7 +103,7 @@ ai_finance_assistant/
 #### Clone Repo: 
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/finpilot-ai.git
+git clone https://github.com/srikanthmandru/finpilot-ai.git
 cd finpilot-ai
 ```
 
