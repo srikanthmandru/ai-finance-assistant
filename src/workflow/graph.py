@@ -1,4 +1,3 @@
-# src/workflow/graph.py
 from langgraph.graph import END, START, StateGraph
 
 from src.workflow.fallback import fallback_node
@@ -33,6 +32,7 @@ def build_graph(agents):
             "news": "news",
             "tax": "tax",
             "fallback": "fallback",
+            "response": "response",
         },
     )
 
@@ -47,8 +47,8 @@ def build_graph(agents):
                 "goal": "goal",
                 "news": "news",
                 "tax": "tax",
-                "response": "response",
                 "fallback": "fallback",
+                "response": "response",
             },
         )
 

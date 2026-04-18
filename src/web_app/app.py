@@ -77,6 +77,8 @@ def setup_app():
 def main():
     st.set_page_config(page_title="FinPilot AI - AI Finance Assistant", layout="wide")
     st.title("FinPilot AI - AI Finance Assistant")
+    st.text("Your personal assistant for all things finance. Ask questions, analyze your portfolio, get market updates, and plan your financial goals.")
+    st.text("Disclaimer: This assistant is for educational purposes only and does not provide financial advice.")
 
     init_session_state()
     app_graph, market_tool, calculator, planner, memory_manager, llm_router, llm_guardrail = setup_app()
@@ -119,9 +121,20 @@ def main():
                 "market_data": st.session_state.get("market_data", {}),
                 "llm_router": llm_router,
                 "llm_guardrail": llm_guardrail,
+                "guardrail_blocked": False,
+                "guardrail_result": {},
+                "agent_chain": [],
+                "agent_outputs": {},
+                "current_agent_index": 0,
+                "response": "Dummy response until agents run.",
+                "error": None,
             }
 
             state = memory_manager.update_memory(state)
+
+            # print("Invoking app graph with state:")
+            # for key, value in state.items():
+            #     print(f"  {key}: {value}")
 
             result = app_graph.invoke(state)
             assistant_reply = result.get("response", "No response generated.")

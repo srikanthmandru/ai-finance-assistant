@@ -8,29 +8,52 @@ def router_node(state: FinanceAssistantState) -> FinanceAssistantState:
     llm_router = state.get("llm_router")
     llm_guardrail = state.get("llm_guardrail")
 
+    # Safe defaults
+    base_state = {
+        **state,
+        "guardrail_result": state.get("guardrail_result", {}),
+        "guardrail_blocked": state.get("guardrail_blocked", False),
+        "agent_chain": state.get("agent_chain", []),
+        "agent_outputs": state.get("agent_outputs", {}),
+        "current_agent_index": state.get("current_agent_index", 0),
+        "response": state.get("response", ""),
+        "error": None,
+    }
+
     if not query:
         return {
-            **state,
+            **base_state,
             "query_type": "qa",
             "selected_agent": "qa",
             "agent_chain": ["qa"],
             "current_agent_index": 0,
-            "agent_outputs": {},
-            "error": "Empty query received.",
+            "response": "Please enter a finance-related question.",
+            "guardrail_result": {
+                "allowed": True,
+                "reason": "finance_related",
+                "confidence": 1.0,
+            },
+            "guardrail_blocked": False,
         }
 
-    if llm_guardrail:
+    # Guardrail first
+    if llm_guardrail is not None:
         guardrail_result = llm_guardrail.evaluate(query)
 
-        if not guardrail_result["allowed"]:
+        if not guardrail_result.get("allowed", False):
             return {
-                **state,
+                **base_state,
+                "query_type": "blocked",
+                "selected_agent": "",
+                "agent_chain": [],
+                "current_agent_index": 0,
+                "agent_outputs": {},
+                "user_profile": profile,
                 "guardrail_result": guardrail_result,
                 "guardrail_blocked": True,
-                "response": llm_guardrail.rejection_message(guardrail_result["reason"]),
-                "agent_chain": [],
-                "agent_outputs": {},
-                "error": None,
+                "response": llm_guardrail.rejection_message(
+                    guardrail_result.get("reason", "non_finance")
+                ),
             }
     else:
         guardrail_result = {
@@ -39,15 +62,19 @@ def router_node(state: FinanceAssistantState) -> FinanceAssistantState:
             "confidence": 1.0,
         }
 
-    if llm_router:
+    # Router classification
+    if llm_router is not None:
         agent_chain = llm_router.classify(query)
     else:
+        agent_chain = ["qa"]
+
+    if not agent_chain:
         agent_chain = ["qa"]
 
     updated_profile = update_user_profile(profile, query)
 
     return {
-        **state,
+        **base_state,
         "query_type": agent_chain[0],
         "selected_agent": agent_chain[0],
         "agent_chain": agent_chain,
@@ -56,12 +83,12 @@ def router_node(state: FinanceAssistantState) -> FinanceAssistantState:
         "user_profile": updated_profile,
         "guardrail_result": guardrail_result,
         "guardrail_blocked": False,
-        "error": None,
+        "response": "",
     }
 
 
 def route_after_router(state: FinanceAssistantState) -> str:
-    if state.get("guardrail_blocked"):
+    if state.get("guardrail_blocked", False):
         return "response"
 
     if state.get("error"):

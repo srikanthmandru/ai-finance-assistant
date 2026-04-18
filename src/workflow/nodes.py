@@ -24,13 +24,13 @@ def make_agent_node(agent_name: str, agents: Dict[str, Any]) -> Callable[[Financ
             return {
                 **state,
                 "error": f"{agent_name} agent failed: {str(exc)}",
+                "response": state.get("response", ""),
             }
 
     return agent_node
 
-
-def response_node(state: FinanceAssistantState) -> FinanceAssistantState:
-    if state.get("guardrail_blocked"):
+def response_node(state):
+    if state.get("guardrail_blocked", False):
         return {
             **state,
             "response": state.get(
@@ -43,13 +43,10 @@ def response_node(state: FinanceAssistantState) -> FinanceAssistantState:
 
     if outputs:
         sections = []
-        ordered_agents = state.get("agent_chain", [])
-
-        for agent_name in ordered_agents:
+        for agent_name in state.get("agent_chain", []):
             if agent_name in outputs:
                 title = agent_name.replace("_", " ").title()
                 sections.append(f"### {title}\n{outputs[agent_name]}")
-
         final_response = "\n\n".join(sections)
     else:
         final_response = state.get("response", "").strip()
