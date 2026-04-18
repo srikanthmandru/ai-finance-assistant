@@ -1,4 +1,3 @@
-# src/workflow/nodes.py
 from typing import Any, Callable, Dict
 
 from src.workflow.state import FinanceAssistantState
@@ -31,6 +30,15 @@ def make_agent_node(agent_name: str, agents: Dict[str, Any]) -> Callable[[Financ
 
 
 def response_node(state: FinanceAssistantState) -> FinanceAssistantState:
+    if state.get("guardrail_blocked"):
+        return {
+            **state,
+            "response": state.get(
+                "response",
+                "I can only help with finance-related questions."
+            ),
+        }
+
     outputs = state.get("agent_outputs", {})
 
     if outputs:

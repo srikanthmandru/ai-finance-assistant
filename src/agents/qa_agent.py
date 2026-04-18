@@ -36,6 +36,10 @@ class QAAgent(BaseAgent):
         return f"""
 You are an AI Finance Assistant for educational purposes only.
 
+Strict rule:
+- You only assist with finance-related educational questions.
+- If the request is not finance-related, refuse briefly.
+
 Instructions:
 - Answer clearly and concisely.
 - Use recent conversation and follow-up context to resolve references like "that", "it", "those", or "earlier".

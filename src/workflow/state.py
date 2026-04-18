@@ -27,6 +27,9 @@ class FinanceAssistantState(TypedDict, total=False):
     summary_message_count: int
 
     llm_router: Any
+    llm_guardrail: Any
+    guardrail_result: Dict[str, Any]
+    guardrail_blocked: bool
 
     response: str
     error: Optional[str]

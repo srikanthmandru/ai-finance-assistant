@@ -6,6 +6,7 @@ from src.core.llm import OpenAILLM
 from src.workflow import llm_router
 from src.workflow.llm_router import LLMRouter
 import os
+from src.guardrails.llm_guardrail import LLMFinanceGuardrail
 
 
 from src.agents import build_agents
@@ -53,6 +54,7 @@ def setup_app():
 
     llm = OpenAILLM(model="gpt-4.1-mini")
     llm_router = LLMRouter(llm=llm)
+    llm_guardrail = LLMFinanceGuardrail(llm=llm)
     calculator = PortfolioCalculator()
     market_tool = MarketDataTool()
     planner = GoalPlanner()
@@ -69,7 +71,7 @@ def setup_app():
     )
 
     app_graph = build_graph(agents)
-    return app_graph, market_tool, calculator, planner, memory_manager, llm_router
+    return app_graph, market_tool, calculator, planner, memory_manager, llm_router, llm_guardrail
 
 
 def main():
@@ -77,7 +79,7 @@ def main():
     st.title("FinPilot AI - AI Finance Assistant")
 
     init_session_state()
-    app_graph, market_tool, calculator, planner, memory_manager, llm_router = setup_app()
+    app_graph, market_tool, calculator, planner, memory_manager, llm_router, llm_guardrail = setup_app()
 
     tab1, tab2, tab3, tab4 = st.tabs(["Chat", "Portfolio", "Market", "Goals"])
 
@@ -116,6 +118,7 @@ def main():
                 "goal_plan": st.session_state.get("goal_plan", {}),
                 "market_data": st.session_state.get("market_data", {}),
                 "llm_router": llm_router,
+                "llm_guardrail": llm_guardrail,
             }
 
             state = memory_manager.update_memory(state)

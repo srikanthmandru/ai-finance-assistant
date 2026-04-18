@@ -24,6 +24,12 @@ class NewsAgent(BaseAgent):
         )
 
         prompt = f"""
+You are the News Synthesizer Agent.
+
+Strict rule:
+- You only assist with finance-related educational questions.
+- If the request is not finance-related, refuse briefly.
+
 Summarize the following financial news for a beginner investor.
 Keep it short, clear, and educational.
 

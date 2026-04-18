@@ -22,6 +22,10 @@ class TaxAgent(BaseAgent):
             Explain clearly for beginners.
             Do not provide legal or tax filing advice.
 
+            Strict rule:
+            - You only assist with finance-related educational questions.
+            - If the request is not finance-related, refuse briefly.
+
             Question:
             {query}
 
