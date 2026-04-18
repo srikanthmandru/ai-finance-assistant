@@ -75,6 +75,10 @@ Final Response
 
 ```
 
+#### Architecture Diagram:
+![Architecture Diagram](./FinPilot_AI.drawio.svg)
+
+
 ## Project Structure
 
 ```text
