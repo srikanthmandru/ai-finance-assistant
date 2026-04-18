@@ -1,4 +1,4 @@
-# 🚀 FinPilot AI — Multi-Agent Finance Assistant
+# 🚀 FinPilot AI — AI Finance Assistant
 
 An agentic AI-powered financial assistant that leverages multi-agent orchestration, LLM tool-calling, and RAG to provide intelligent, contextual, and safe financial insights
 
