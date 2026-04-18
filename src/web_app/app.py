@@ -73,8 +73,8 @@ def setup_app():
 
 
 def main():
-    st.set_page_config(page_title="AI Finance Assistant", layout="wide")
-    st.title("AI Finance Assistant")
+    st.set_page_config(page_title="FinPilot AI - AI Finance Assistant", layout="wide")
+    st.title("FinPilot AI - AI Finance Assistant")
 
     init_session_state()
     app_graph, market_tool, calculator, planner, memory_manager, llm_router = setup_app()
@@ -126,7 +126,7 @@ def main():
             st.session_state.user_profile = result.get("user_profile", st.session_state.get("user_profile", {}))
             st.session_state.portfolio_analysis = result.get("portfolio_analysis", st.session_state.get("portfolio_analysis", {}))
             st.session_state.goal_plan = result.get("goal_plan", st.session_state.get("goal_plan", {}))
-            
+
             if parsed_portfolio.get("holdings"):
                 st.session_state.portfolio_data = parsed_portfolio
 

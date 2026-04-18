@@ -2,7 +2,7 @@ import os
 import re
 from datetime import datetime, timezone
 from typing import Dict, List
-
+import streamlit as st
 import requests
 import yfinance as yf
 from dotenv import load_dotenv
@@ -15,7 +15,10 @@ load_dotenv()
 class MarketDataTool:
     def __init__(self, ttl_seconds: int = 1800):
         self.cache = CacheManager(ttl_seconds=ttl_seconds)
-        self.alpha_vantage_api_key = os.getenv("ALPHA_VANTAGE_API_KEY", "").strip()
+        self.alpha_vantage_api_key = (
+            os.getenv("ALPHA_VANTAGE_API_KEY")
+            or st.secrets.get("ALPHA_VANTAGE_API_KEY")
+        )
         self.alpha_vantage_url = "https://www.alphavantage.co/query"
 
     def _extract_ticker(self, query: str) -> str:
